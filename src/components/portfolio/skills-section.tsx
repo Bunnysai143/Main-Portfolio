@@ -8,7 +8,6 @@ import {
   Database, 
   Box, 
   Sparkles, 
-  MoreHorizontal,
   Zap,
   CheckCircle2,
   Code2
