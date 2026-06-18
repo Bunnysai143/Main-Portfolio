@@ -2,7 +2,6 @@
 
 import { MotionWrapper, MotionContainer, MotionItem } from "@/components/shared/motion-wrapper";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Briefcase, Calendar, MapPin } from "lucide-react";
 import { formatDateShort } from "@/lib/utils";
 
@@ -29,25 +28,42 @@ export function ExperienceSection({ data }: { data: Experience[] }) {
             <p className="text-sm font-medium text-accent tracking-wider uppercase mb-2">
               Career Path
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-display font-bold tracking-tight">
               Professional Experience
             </h2>
+            <div className="section-gradient-line w-24 mx-auto mt-4" />
           </div>
         </MotionWrapper>
 
-        <MotionContainer className="max-w-3xl mx-auto space-y-6">
+        <MotionContainer className="max-w-3xl mx-auto space-y-8 relative">
+          {/* Connected timeline line */}
+          <div className="absolute left-[11px] top-0 bottom-0 w-[2px] bg-accent/20 hidden md:block" />
+
           {data.map((exp) => (
             <MotionItem key={exp._id}>
-              <Card className="relative hover:shadow-md transition-shadow duration-300">
+              <div className="relative flex gap-6">
                 {/* Timeline dot */}
-                <div className="absolute -left-3 top-8 w-6 h-6 rounded-full bg-accent/10 border-2 border-accent flex items-center justify-center hidden md:flex">
-                  <Briefcase className="h-3 w-3 text-accent" />
+                <div className="relative z-10 shrink-0 hidden md:flex">
+                  <div
+                    className={`w-6 h-6 rounded-full flex items-center justify-center mt-6 ${
+                      exp.isCurrent
+                        ? "bg-accent animate-pulse"
+                        : "bg-accent/10 border-2 border-accent"
+                    }`}
+                  >
+                    <Briefcase className={`h-3 w-3 ${exp.isCurrent ? "text-white" : "text-accent"}`} />
+                  </div>
                 </div>
 
-                <CardContent className="pt-6">
+                {/* Card */}
+                <div
+                  className={`glass-card card-glow rounded-xl flex-1 p-6 ${
+                    exp.isCurrent ? "border-l-2 border-l-accent" : ""
+                  }`}
+                >
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
                     <div>
-                      <h3 className="text-lg font-semibold text-foreground">
+                      <h3 className="text-lg font-display font-semibold text-foreground">
                         {exp.position}
                       </h3>
                       <p className="text-base font-medium text-accent">
@@ -104,15 +120,15 @@ export function ExperienceSection({ data }: { data: Experience[] }) {
                         <Badge
                           key={tech}
                           variant="secondary"
-                          className="text-xs"
+                          className="text-xs hover:scale-105 transition-transform cursor-default"
                         >
                           {tech}
                         </Badge>
                       ))}
                     </div>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </MotionItem>
           ))}
         </MotionContainer>

@@ -25,29 +25,38 @@
     --input: 214 32% 91%;
     --ring: 217 91% 60%;
     --radius: 0.5rem;
+
+    /* Classic Blue Accent System */
+    --accent-light: 217 91% 70%;
+    --accent-muted: 217 91% 60%;
+    --glow-color: 217 91% 60%;
   }
 
   .dark {
     /* Dark Mode - Deep & Professional */
-    --background: 222 47% 9%; /* #0B1120 */
+    --background: 222 47% 7%;
     --foreground: 213 27% 84%; /* #E5E7EB */
-    --card: 220 33% 10%; /* #111827 */
+    --card: 222 40% 10%;
     --card-foreground: 213 27% 84%;
-    --popover: 220 33% 10%;
+    --popover: 222 40% 10%;
     --popover-foreground: 213 27% 84%;
     --primary: 213 27% 84%;
     --primary-foreground: 222 47% 9%;
     --secondary: 217 33% 17%;
     --secondary-foreground: 213 27% 84%;
     --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%; /* #9CA3AF */
-    --accent: 217 91% 60%; /* #3B82F6 */
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 100%;
-    --border: 217 33% 17%;
+    --border: 217 20% 18%;
     --input: 217 33% 17%;
     --ring: 217 91% 60%;
+
+    --accent-light: 217 91% 70%;
+    --accent-muted: 217 91% 60%;
+    --glow-color: 217 91% 70%;
   }
 }
 
@@ -63,13 +72,128 @@
 /* Smooth theme transition */
 html {
   transition: color-scheme 0.3s;
+  scroll-behavior: smooth;
 }
 
 html.dark {
   color-scheme: dark;
 }
 
-/* Custom scrollbar */
+/* ========== CLASSIC UTILITY CLASSES ========== */
+
+@layer utilities {
+  /* Clean accent text highlight */
+  .text-gradient {
+    @apply text-accent;
+  }
+
+  .text-gradient-animated {
+    @apply text-accent;
+  }
+
+  /* Clean glass card - subtle, professional */
+  .glass-card {
+    background: hsl(var(--card) / 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.6);
+    transition: all 0.3s ease;
+  }
+
+  .dark .glass-card {
+    background: hsl(var(--card) / 0.5);
+    border: 1px solid hsl(var(--border) / 0.4);
+  }
+
+  /* Subtle card hover glow */
+  .card-glow {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .card-glow:hover {
+    box-shadow: 0 4px 20px hsl(var(--glow-color) / 0.1),
+                0 0 40px hsl(var(--glow-color) / 0.05);
+    transform: translateY(-2px);
+  }
+
+  /* Accent border on card */
+  .gradient-border {
+    position: relative;
+    border: 1px solid hsl(var(--accent) / 0.4);
+    border-radius: var(--radius);
+  }
+
+  /* Classic accent button */
+  .btn-gradient {
+    background: hsl(var(--accent));
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .btn-gradient:hover {
+    background: hsl(var(--accent-light));
+    box-shadow: 0 4px 15px hsl(var(--accent) / 0.3);
+    transform: translateY(-1px);
+  }
+
+  /* Subtle grid pattern */
+  .bg-grid {
+    background-image:
+      linear-gradient(hsl(var(--border) / 0.15) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.15) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* Dot pattern */
+  .bg-dots {
+    background-image: radial-gradient(
+      hsl(var(--muted-foreground) / 0.1) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
+  }
+
+  /* Clean section divider line */
+  .section-gradient-line {
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--accent) / 0.5),
+      transparent
+    );
+  }
+}
+
+/* ========== KEYFRAME ANIMATIONS ========== */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.03); }
+}
+
+/* ========== AVATAR FLOAT ANIMATION ========== */
+
+.avatar-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.avatar-glow {
+  filter: drop-shadow(0 0 30px hsl(var(--accent) / 0.2));
+}
+
+/* ========== PROFESSIONAL SCROLLBAR ========== */
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -79,12 +203,12 @@ html.dark {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
+  background: hsl(var(--accent) / 0.4);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: hsl(var(--accent) / 0.6);
 }
 
 /* Selection */

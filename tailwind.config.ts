@@ -59,6 +59,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-inter)", ...fontFamily.sans],
+        display: ["var(--font-space-grotesk)", ...fontFamily.sans],
       },
       keyframes: {
         "fade-up": {
@@ -69,10 +70,34 @@ const config: Config = {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        "slide-in-left": {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" },
+        },
+        "pulse-dot": {
+          "0%, 100%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.5)", opacity: "0.5" },
+        },
+        "counter-up": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "scroll-bounce": {
+          "0%, 100%": { transform: "translateY(0)", opacity: "1" },
+          "50%": { transform: "translateY(6px)", opacity: "0.5" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.5s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
+        "slide-in-left": "slide-in-left 0.4s ease-out forwards",
+        "pulse-dot": "pulse-dot 2s ease-in-out infinite",
+        "counter-up": "counter-up 0.4s ease-out",
+        "scroll-bounce": "scroll-bounce 2s ease-in-out infinite",
+      },
+      boxShadow: {
+        glow: "0 0 20px hsl(var(--glow-color) / 0.2), 0 0 40px hsl(var(--glow-color) / 0.1)",
+        "glow-lg": "0 0 30px hsl(var(--glow-color) / 0.3), 0 0 60px hsl(var(--glow-color) / 0.15)",
       },
     },
   },

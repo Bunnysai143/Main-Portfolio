@@ -1,8 +1,9 @@
 "use client";
 
-import { MotionWrapper } from "@/components/shared/motion-wrapper";
-import { Card, CardContent } from "@/components/ui/card";
+import { MotionWrapper, MotionContainer, MotionItem } from "@/components/shared/motion-wrapper";
 import { Briefcase, FolderOpen, Wrench } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { useInView } from "framer-motion";
 
 interface AboutData {
   title?: string;
@@ -11,6 +12,36 @@ interface AboutData {
   yearsOfExperience?: number;
   projectsCompleted?: number;
   technologiesUsed?: number;
+}
+
+function CounterAnimation({ target, suffix = "" }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!isInView) return;
+    const duration = 1500;
+    const steps = 40;
+    const increment = target / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [isInView, target]);
+
+  return (
+    <span ref={ref} className="text-3xl font-display text-accent font-bold">
+      {count}{suffix}
+    </span>
+  );
 }
 
 export function AboutSection({ data }: { data: AboutData }) {
@@ -30,17 +61,17 @@ export function AboutSection({ data }: { data: AboutData }) {
   const stats = [
     {
       icon: Briefcase,
-      value: `${about.yearsOfExperience}+`,
+      value: about.yearsOfExperience,
       label: "Years Experience",
     },
     {
       icon: FolderOpen,
-      value: `${about.projectsCompleted}+`,
+      value: about.projectsCompleted,
       label: "Projects Built",
     },
     {
       icon: Wrench,
-      value: `${about.technologiesUsed}+`,
+      value: about.technologiesUsed,
       label: "Technologies",
     },
   ];
@@ -53,47 +84,43 @@ export function AboutSection({ data }: { data: AboutData }) {
             <p className="text-sm font-medium text-accent tracking-wider uppercase mb-2">
               Background
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-display font-bold tracking-tight">
               {about.title}
             </h2>
+            <div className="section-gradient-line w-24 mx-auto mt-4" />
           </div>
         </MotionWrapper>
 
         <div className="max-w-3xl mx-auto">
           <MotionWrapper delay={0.1}>
-            <p className="text-base text-muted-foreground leading-relaxed mb-6">
+            <p className="text-base text-muted-foreground leading-relaxed mb-6 border-l-2 border-accent/30 pl-4">
               {about.description}
             </p>
           </MotionWrapper>
 
           {about.longDescription && (
             <MotionWrapper delay={0.2}>
-              <p className="text-base text-muted-foreground leading-relaxed mb-12">
+              <p className="text-base text-muted-foreground leading-relaxed mb-12 border-l-2 border-accent/30 pl-4">
                 {about.longDescription}
               </p>
             </MotionWrapper>
           )}
 
-          <MotionWrapper delay={0.3}>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {stats.map((stat) => (
-                <Card
-                  key={stat.label}
-                  className="text-center hover:shadow-md transition-shadow duration-300"
-                >
-                  <CardContent className="pt-6">
-                    <stat.icon className="h-6 w-6 mx-auto mb-3 text-accent" />
-                    <p className="text-2xl font-bold text-foreground">
-                      {stat.value}
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {stat.label}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </MotionWrapper>
+          <MotionContainer className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {stats.map((stat) => (
+              <MotionItem key={stat.label}>
+                <div className="glass-card card-glow rounded-xl p-6 text-center">
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-accent/10 flex items-center justify-center">
+                    <stat.icon className="h-6 w-6 text-accent" />
+                  </div>
+                  <CounterAnimation target={stat.value} suffix="+" />
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {stat.label}
+                  </p>
+                </div>
+              </MotionItem>
+            ))}
+          </MotionContainer>
         </div>
       </div>
     </section>
