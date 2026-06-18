@@ -290,18 +290,18 @@ export function SkillsSection({ data }: { data: Skill[] }) {
             return (
               <MotionItem key={category}>
                 <div className={`glass-card rounded-2xl p-6 h-full flex flex-col justify-between border transition-all duration-300 ${meta.colorClass}`}>
-                  <div>
+                  <div>               
                     {/* Card Header */}
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center ${meta.iconBg}`}>
-                          <CategoryIcon className="w-5 h-5" />
+                          <CategoryIcon className="w-5 h-5"/>
                         </div>
                         <h3 className="font-display font-bold text-foreground dark:text-white text-base">
                           {category}
                         </h3>
                       </div>
-                      <MoreHorizontal className="w-5 h-5 text-muted-foreground/40 cursor-default" />
+                     
                     </div>
 
                     {/* Skill Items List */}

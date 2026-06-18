@@ -2,6 +2,7 @@ import dbConnect from "@/lib/db";
 import Hero from "@/models/Hero";
 import { authenticateRequest, successResponse, errorResponse, unauthorizedResponse } from "@/lib/api-utils";
 import { heroSchema } from "@/schemas";
+import { logActivity } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,15 @@ export async function PUT(request: Request) {
       { ...validation.data, isActive: true },
       { new: true, upsert: true }
     );
+
+    await logActivity({
+      action: "update",
+      entity: "hero",
+      entityId: hero._id.toString(),
+      message: `Updated hero section (Name: ${hero.name})`,
+      adminId: session.id,
+      adminEmail: session.email,
+    });
 
     return successResponse(hero);
   } catch (error) {

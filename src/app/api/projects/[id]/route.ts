@@ -2,6 +2,7 @@ import dbConnect from "@/lib/db";
 import Project from "@/models/Project";
 import { authenticateRequest, successResponse, errorResponse, unauthorizedResponse } from "@/lib/api-utils";
 import { projectSchema } from "@/schemas";
+import { logActivity } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,16 @@ export async function PUT(
       { new: true }
     );
     if (!project) return errorResponse("Project not found", 404);
+
+    await logActivity({
+      action: "update",
+      entity: "project",
+      entityId: project._id.toString(),
+      message: `Updated project: ${project.title}`,
+      adminId: session.id,
+      adminEmail: session.email,
+    });
+
     return successResponse(project);
   } catch (error) {
     console.error("PUT project error:", error);
@@ -59,6 +70,16 @@ export async function DELETE(
     await dbConnect();
     const project = await Project.findByIdAndDelete(params.id);
     if (!project) return errorResponse("Project not found", 404);
+
+    await logActivity({
+      action: "delete",
+      entity: "project",
+      entityId: project._id.toString(),
+      message: `Deleted project: ${project.title}`,
+      adminId: session.id,
+      adminEmail: session.email,
+    });
+
     return successResponse({ message: "Project deleted" });
   } catch (error) {
     console.error("DELETE project error:", error);

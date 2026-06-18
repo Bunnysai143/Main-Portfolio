@@ -2,6 +2,7 @@ import dbConnect from "@/lib/db";
 import Project from "@/models/Project";
 import { authenticateRequest, successResponse, errorResponse, unauthorizedResponse } from "@/lib/api-utils";
 import { projectSchema } from "@/schemas";
+import { logActivity } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +32,16 @@ export async function POST(request: Request) {
     }
 
     const project = await Project.create(validation.data);
+
+    await logActivity({
+      action: "create",
+      entity: "project",
+      entityId: project._id.toString(),
+      message: `Created project: ${project.title}`,
+      adminId: session.id,
+      adminEmail: session.email,
+    });
+
     return successResponse(project, 201);
   } catch (error) {
     console.error("POST project error:", error);

@@ -2,6 +2,7 @@ import dbConnect from "@/lib/db";
 import About from "@/models/About";
 import { authenticateRequest, successResponse, errorResponse, unauthorizedResponse } from "@/lib/api-utils";
 import { aboutSchema } from "@/schemas";
+import { logActivity } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,15 @@ export async function PUT(request: Request) {
       { ...validation.data, isActive: true },
       { new: true, upsert: true }
     );
+
+    await logActivity({
+      action: "update",
+      entity: "about",
+      entityId: about._id.toString(),
+      message: "Updated about section summary/details",
+      adminId: session.id,
+      adminEmail: session.email,
+    });
 
     return successResponse(about);
   } catch (error) {
